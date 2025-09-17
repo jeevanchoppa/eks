@@ -2,18 +2,19 @@
 ```
 eksctl create cluster --name demo-cluster --region us-east-1 --fargate
 ```
+
 ![alt text](image.png)
 
-# update kubeconfig file
+# Update kubeconfig file
 ```
 aws eks update-kubeconfig --name demo-cluster --region us-east-1
 ```
-# create a name to deploy 2048 game
+# Create a fargateprofile to deploy 2048 game
 ```
 eksctl create fargateprofile --cluster demo-cluster --region us-east-1 --name alb-sample-app --namespace game-2048
 ```
 
-# create namespace, deployment, service, ingress
+# Create namespace, deployment, service, ingress
 ```
 kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.5.4/docs/examples/2048/2048_full.yaml
 ```
@@ -21,15 +22,16 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/aws-load-bala
 ```
 eksctl utils associate-iam-oidc-provider --cluster demo-cluster --approve
 ```
-# download iam_policy json file
+# Download iam_policy json file
 ```
 curl -O https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.11.0/docs/install/iam_policy.json
 ```
 
 # Create IAM Policy
+```
 aws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicy --policy-document file://iam_policy.json
-
-# Create IAM ROlE
+```
+# Create IAM Service account
 ```
 eksctl create iamserviceaccount \
   --cluster=<your-cluster-name> \
@@ -39,11 +41,11 @@ eksctl create iamserviceaccount \
   --attach-policy-arn=arn:aws:iam::<your-aws-account-id>:policy/AWSLoadBalancerControllerIAMPolicy \
   --approve
 ```
-# Deploy ALB controller
+# Deploy ALB Ingress controller using helm
 ```
 helm repo add eks https://aws.github.io/eks-charts
 
-```'
+```
 
 # update helm repo
 ```
@@ -65,6 +67,7 @@ kubectl get deployment -n kube-system aws-load-balancer-controller
 ```
 
 # Access the game using DNS name
+
 ![alt text](image-1.png)
 
 # Delete the cluster
