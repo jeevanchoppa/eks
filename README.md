@@ -68,6 +68,7 @@ kubectl get deployment -n kube-system aws-load-balancer-controller
 ![alt text](image-1.png)
 
 # Delete the cluster
+
 ```
 eksctl delete cluster --name demo-cluster --region us-east-1
 ```
